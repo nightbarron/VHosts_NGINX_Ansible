@@ -1,0 +1,24 @@
+---
+# tasks file for setup-vhosts
+- name: Create vhost.d nginx/httpd
+  file:
+      path: "{{ item }}"
+      state: directory
+  with_items:
+    - /etc/nginx/vhost.d
+    - /etc/httpd/vhost.d
+
+- name: Edit httpd.conf
+  blockinfile:
+    path: /etc/httpd/conf/httpd.conf
+    block: |
+      IncludeOptional vhost.d/*.conf
+  notify: Restart httpd
+
+- name: Edit config in NGINX
+  lineinfile:
+    path: /etc/nginx/nginx.conf
+    backup: yes
+    insertafter: /*include \/etc\/nginx\/conf\.d*/
+    line: "    include /etc/nginx/vhost.d/*.conf;"
+  notify: Restart nginx

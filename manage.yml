@@ -1,0 +1,28 @@
+- name: Enter setup
+  include_role:
+    name: "{{ item }}"
+  with_items:
+    - common
+    - web-server
+    - db-server
+    - php-handler
+    - setup-vhosts
+  when: ( userchoice == "1" )
+
+- name: Enter create vhosts
+  include_role:
+    name: "{{ item }}"
+  with_items:
+    - create-vhosts
+  when: ( userchoice == "2" )
+
+- name: Enter Test mode
+  include_role:
+    name: "{{ item }}"
+  with_items:
+    - test
+  when: ( userchoice == "3" )
+
+- name: Exit
+  debug: 
+    msg: "Bye bye!"

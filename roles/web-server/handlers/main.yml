@@ -1,0 +1,23 @@
+---
+# handlers file for web-server
+- name: Start httpd
+  service:
+    name: httpd
+    enabled: yes
+    state: started
+
+- name: Restart httpd
+  service:
+    name: httpd
+    state: restarted
+
+- name: Start nginx
+  service:
+    name: nginx
+    enabled: yes
+    state: started
+    
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted

@@ -1,0 +1,20 @@
+---
+# tasks file for test
+vars_prompt:
+  - name: Input domain name
+    prompt: |
+      Enter your domain name: 
+    private: no
+    register: domain_name
+
+  - name: Input user name
+    prompt: "Enter your user name: "
+    private: no
+    register: user_name
+
+  - name: Input password
+    prompt: "Enter your password: "
+    private: yes
+    encrypt: sha512_crypt
+    confirm: yes
+    salt_size: 7

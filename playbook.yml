@@ -1,0 +1,14 @@
+- hosts: webservers       
+  #remote_user: tuandlh
+  become: true
+  vars_prompt:
+    - name: userchoice
+      prompt: |
+        1/ Setup Environment (For new Server)
+        2/ Create VHost
+        3/ Test
+        4/ Exit
+        Enter your choice?
+      private: no
+  tasks:
+    - include: manage.yml

@@ -1,0 +1,42 @@
+---
+# tasks file for web-server
+- name: Install httpd
+  yum:
+    name: httpd
+    state: present
+
+- name: Change port httpd
+  replace:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^(NameVirtualHost|Listen)\s+80\s*$'
+    replace: '\1 127.0.0.1:8080'
+    backup: yes
+  notify: Start httpd
+  
+- name: Install NGINX REVERSE PROXY
+  yum:
+    name: nginx
+    state: present
+  notify: Start nginx
+
+- name: Create index.html
+  template:
+    src: index.html.j2 
+    dest: /var/www/html/index.html
+    owner: apache
+    group: apache
+    mode: 0644
+  notify: Restart httpd
+
+- name: Create info.php
+  copy:
+    dest: /var/www/html/info.php
+    content: |
+      <?php
+        system("id");
+        phpinfo();
+      ?>
+    owner: apache
+    group: apache
+    mode: 0710
+  notify: Restart httpd
