@@ -8,6 +8,10 @@
     permanent: true
     state: enabled
 
+- name: Disable SELINUX
+  selinux:
+    state: disabled
+
 - name: Add epel-release repo
   yum:
     name: epel-release

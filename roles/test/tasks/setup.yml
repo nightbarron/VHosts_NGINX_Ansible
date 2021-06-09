@@ -1,0 +1,40 @@
+- name: Create user {{ user_name }}
+  user:
+    name: "{{ user_name }}"
+    password: "{{ user_password }}"
+    groups:
+      - apache
+    state: present
+
+- name: Create password note
+  copy:
+    dest: /home/{{ user_name }}/password.secret
+    content: |
+      Password: {{ user_password }}
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    mode: 0700
+
+- name: Create web dir for {{ user_name }}
+  file:
+    path: "{{ dirList }}"
+    owner: "{{ user_name }}"
+    group: apache
+    state: directory
+  with_items:
+    - /home/{{ user_name }}/web/public_html
+    - /home/{{ user_name }}/web/logs
+  loop_control:
+    loop_var: dirList
+
+- name: Create HTTPD config
+  template:
+    src: httpd.conf.j2
+    dest: /etc/httpd/vhost.d/{{ domain_name }}.conf
+  notify: Restart httpd
+
+- name: Create Nginx config
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/vhost.d/{{ domain_name }}.conf
+  notify: Restart nginx

@@ -10,5 +10,6 @@
         4/ Exit
         Enter your choice?
       private: no
+
   tasks:
     - include: manage.yml

@@ -1,2 +1,37 @@
 ---
 # tasks file for create-vhosts
+
+- name: Enter domain name
+  pause:
+    prompt: "Enter domain name" 
+  register: domainName
+
+- set_fact: domain_name="{{ domainName.user_input }}"
+
+- name: Input user name
+  pause:
+    prompt: "Enter your user name"
+  register: userName
+
+- set_fact: user_name="{{ userName.user_input }}"
+
+- set_fact: user_password="{{ lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=10') }}"
+
+- name: Show info
+  pause:
+    prompt: |
+      Domain Info:
+      
+      * Username: {{ user_name }}
+      * Password: {{ user_password }}
+      * Domain: {{ domain_name }}
+      * Home directory: /home/{{ user_name }}
+      * Web Root: ~/web/public_html
+
+      Enter "y" or "Y" to continue create, other to exit!
+  register: isContinue
+
+- name: Setting up
+  include: setup.yml
+  when: ( isContinue.user_input | lower == "y" )
+

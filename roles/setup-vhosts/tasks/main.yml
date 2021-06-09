@@ -2,11 +2,13 @@
 # tasks file for setup-vhosts
 - name: Create vhost.d nginx/httpd
   file:
-      path: "{{ item }}"
+      path: "{{ dir_config }}"
       state: directory
   with_items:
     - /etc/nginx/vhost.d
     - /etc/httpd/vhost.d
+  loop_control: 
+    loop_var: dir_config
 
 - name: Edit httpd.conf
   blockinfile:
@@ -21,4 +23,19 @@
     backup: yes
     insertafter: /*include \/etc\/nginx\/conf\.d*/
     line: "    include /etc/nginx/vhost.d/*.conf;"
+
+- name: Change user running nginx to apache
+  lineinfile:
+    path: /etc/nginx/nginx.conf
+    backup: yes
+    regexp: '^user nginx;'
+    line: "user apache;"
   notify: Restart nginx
+
+- name: Change owner for /var/lib/nginx
+  file:
+    path: /var/lib/nginx
+    owner: apache
+    group: root
+    recurse: yes
+

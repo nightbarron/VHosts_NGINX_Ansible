@@ -1,2 +1,12 @@
 ---
 # handlers file for create-vhosts
+
+- name: Restart httpd
+  service:
+    name: httpd
+    state: restarted
+    
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted

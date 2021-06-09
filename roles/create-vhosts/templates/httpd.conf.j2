@@ -1,0 +1,13 @@
+<VirtualHost 127.0.0.1:8080>
+    DocumentRoot "/home/{{ user_name }}/web/public_html"
+    ServerName  {{ domain_name }}
+    ErrorLog    /home/{{ user_name }}/web/logs/{{ domain_name }}.error.log
+    CustomLog   /home/{{ user_name }}/web/logs/{{ domain_name }}.log combined
+
+    <Directory /home/{{ user_name }}/web/public_html>
+        Options +Indexes +FollowSymLinks +ExecCGI
+        AllowOverride All
+        Require all granted
+        DirectoryIndex index.php index.html
+    </Directory>
+</VirtualHost>
