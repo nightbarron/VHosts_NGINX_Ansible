@@ -40,4 +40,8 @@ server {
                 expires max;
                 try_files $uri @proxy;
         }
+
+        location ~* /wp-content/uploads/.+\.php {
+                return 444;
+        }
 }
